@@ -31,14 +31,14 @@ public class HttpRequestGeolocalizacaoService extends HttpRequestService {
 	@Override
 	protected HttpResponseDados tratarResponse() throws Exception{
 		
-		HttpResponseDados responseDto = new HttpResponseDados();
+		HttpResponseDados responseDados = new HttpResponseDados();
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(this.response.getEntity().getContent()));
 		
-		GeolocalizacaoDados objetoRetornoApiGeo = gson.fromJson(reader, GeolocalizacaoDados.class);
-		responseDto.addItem("objetoRetornoApiGeo", objetoRetornoApiGeo);
+		GeolocalizacaoDados geolocalizacaoDados = gson.fromJson(reader, GeolocalizacaoDados.class);
+		responseDados.addItem("geolocalizacaoDados", geolocalizacaoDados);
 		
-		return responseDto;
+		return responseDados;
 	}
 
 }

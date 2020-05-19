@@ -31,14 +31,14 @@ public class HttpRequestPrevisaoDoTempoService extends HttpRequestService {
 	@Override
 	protected HttpResponseDados tratarResponse() throws Exception{
 		
-		HttpResponseDados responseDto = new HttpResponseDados();
+		HttpResponseDados responseDados = new HttpResponseDados();
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(this.response.getEntity().getContent()));
 		
-		PrevisaoDoTempoDados objetoRetornoApiPrevisao = gson.fromJson(reader, PrevisaoDoTempoDados.class);
-		responseDto.addItem("objetoRetornoApiPrevisao", objetoRetornoApiPrevisao);
+		PrevisaoDoTempoDados previsaoDoTempoDados = gson.fromJson(reader, PrevisaoDoTempoDados.class);
+		responseDados.addItem("previsaoDoTempoDados", previsaoDoTempoDados);
 		
-		return responseDto;
+		return responseDados;
 	}
 
 }
