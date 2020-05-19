@@ -3,7 +3,7 @@ package com.capgemini.clima.domain;
 public class Currently {
 	
 	private float temperature;
-	private short precipProbability;
+	private float precipProbability;
 	
 	public float getTemperature() {
 		return temperature;
@@ -11,10 +11,10 @@ public class Currently {
 	public void setTemperature(float temperature) {
 		this.temperature = temperature;
 	}
-	public short getPrecipProbability() {
+	public float getPrecipProbability() {
 		return precipProbability;
 	}
-	public void setPrecipProbability(short precipProbability) {
+	public void setPrecipProbability(float precipProbability) {
 		this.precipProbability = precipProbability;
 	}
 	@Override

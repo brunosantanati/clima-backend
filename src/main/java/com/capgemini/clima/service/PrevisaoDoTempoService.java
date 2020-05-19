@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.net.URISyntaxException;
+
+import org.apache.http.client.utils.URIBuilder;
+
 import com.capgemini.clima.domain.GeolocalizacaoDados;
 import com.capgemini.clima.domain.HttpRequestDados;
 import com.capgemini.clima.domain.HttpResponseDados;
@@ -30,7 +34,7 @@ public class PrevisaoDoTempoService {
 		String resumo = previsaoDoTempoDados.getDaily().getData().get(0).getSummary();
 		float humidade = previsaoDoTempoDados.getDaily().getData().get(0).getHumidity();
 		float temperaturaAtual = previsaoDoTempoDados.getCurrently().getTemperature();
-		short chancesDeChover = previsaoDoTempoDados.getCurrently().getPrecipProbability();
+		float chancesDeChover = previsaoDoTempoDados.getCurrently().getPrecipProbability();
 		
 		PrevisaoDoTempoDto previsaoDoTempoDto = new PrevisaoDoTempoDto();
 		previsaoDoTempoDto.setResumo(resumo);
@@ -43,8 +47,8 @@ public class PrevisaoDoTempoService {
 		return previsaoDoTempoDto;		
 	}
 	
-	public GeolocalizacaoDados consumirApiDeGeolocalizacao(String endereco) {
-		String urlServicoGeolocalizacao = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + endereco + ".json?access_token=pk.eyJ1IjoiYnJ1bm9zYW50YW5hdGkiLCJhIjoiY2s4ODFmMHB4MDBkeDNnbXNxOHhqYjBjaiJ9.mj3Dg_SMDKGbiOJ2oyT4Cw&limit=1";
+	private GeolocalizacaoDados consumirApiDeGeolocalizacao(String endereco) {
+		String urlServicoGeolocalizacao = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + codificarTexto(endereco) + ".json?access_token=pk.eyJ1IjoiYnJ1bm9zYW50YW5hdGkiLCJhIjoiY2s4ODFmMHB4MDBkeDNnbXNxOHhqYjBjaiJ9.mj3Dg_SMDKGbiOJ2oyT4Cw&limit=1";
 		
 		HttpResponseDados dadosRespostaGeo = httpRequestGeolocalizacaoService.executarRequest(urlServicoGeolocalizacao, new HttpRequestDados());
 		
@@ -53,7 +57,26 @@ public class PrevisaoDoTempoService {
 		return geolocalizacaoDados;
 	}
 	
-	public PrevisaoDoTempoDados consumirApiPrevisaoDoTempo(GeolocalizacaoDados geolocalizacaoDados) {
+	private String codificarTexto(String texto) {
+		
+		try {
+			
+			String textoCodificado = new URIBuilder()
+					  .setParameter("i", texto)
+					  .build()
+					  .getRawQuery()
+					  .substring(2);
+			
+			return textoCodificado;
+			
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		return texto;
+	}
+	
+	private PrevisaoDoTempoDados consumirApiPrevisaoDoTempo(GeolocalizacaoDados geolocalizacaoDados) {
 		
 		Float latitude = geolocalizacaoDados.getFeatures().get(0).getCenter().get(1);
 		Float longitude = geolocalizacaoDados.getFeatures().get(0).getCenter().get(0);
