@@ -7,14 +7,14 @@ import org.apache.http.client.methods.HttpGet;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.capgemini.clima.domain.GeolocalizacaoDados;
 import com.capgemini.clima.domain.HttpResponseDados;
+import com.capgemini.clima.domain.PrevisaoDoTempoDados;
 import com.capgemini.clima.enums.HttpHeadersEnum;
 import com.google.gson.Gson;
 
-@Service("geolocalizacao")
+@Service("previsaoDoTempo")
 @Scope("prototype")
-public class HttpRequestGeolocalizacaoService extends HttpRequestService {
+public class HttpRequestPrevisaoDoTempoService extends HttpRequestService {
 	
 	Gson gson = new Gson();
 
@@ -25,7 +25,7 @@ public class HttpRequestGeolocalizacaoService extends HttpRequestService {
 
 	@Override
 	protected void adicionarHeaders() {
-		this.request.addHeader(HttpHeadersEnum.ACCEPT.get(), HttpHeadersEnum.APPLICATION_JSON.get());		
+		this.request.addHeader(HttpHeadersEnum.ACCEPT.get(), HttpHeadersEnum.APPLICATION_JSON.get());
 	}
 	
 	@Override
@@ -35,8 +35,8 @@ public class HttpRequestGeolocalizacaoService extends HttpRequestService {
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(this.response.getEntity().getContent()));
 		
-		GeolocalizacaoDados objetoRetornoApiGeo = gson.fromJson(reader, GeolocalizacaoDados.class);
-		responseDto.addItem("objetoRetornoApiGeo", objetoRetornoApiGeo);
+		PrevisaoDoTempoDados objetoRetornoApiPrevisao = gson.fromJson(reader, PrevisaoDoTempoDados.class);
+		responseDto.addItem("objetoRetornoApiPrevisao", objetoRetornoApiPrevisao);
 		
 		return responseDto;
 	}
